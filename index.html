@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kaanqnw.com | Ben Kimim?</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0a1628 0%, #0d1f3c 40%, #0b2b4f 70%, #0a1628 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            color: #e0e8f0;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(18, 30, 55, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            border-radius: 24px;
+            padding: 3.5rem;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6),
+                        0 0 80px rgba(37, 99, 235, 0.08);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.35rem 1rem;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            border-radius: 100px;
+            color: #93bbfc;
+            margin-bottom: 1.75rem;
+            font-weight: 500;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+            line-height: 1.15;
+        }
+
+        h1 span {
+            color: #3b82f6;
+        }
+
+        .subtitle {
+            font-size: 1.15rem;
+            color: #94a3b8;
+            margin-bottom: 0.25rem;
+            font-weight: 300;
+            border-left: 3px solid #3b82f6;
+            padding-left: 1.25rem;
+        }
+
+        .location-line {
+            font-size: 1.05rem;
+            color: #60a5fa;
+            margin-bottom: 2.5rem;
+            border-left: 3px solid rgba(59, 130, 246, 0.3);
+            padding-left: 1.25rem;
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .location-line::before {
+            content: "📍";
+            font-size: 0.9rem;
+        }
+
+        .bio-text {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #c8d2e0;
+            margin-bottom: 2.5rem;
+        }
+
+        .bio-text p {
+            margin-bottom: 1rem;
+        }
+
+        .bio-text .highlight {
+            color: #60a5fa;
+            font-weight: 600;
+        }
+
+        .bio-text .gaziantep-highlight {
+            color: #f59e0b;
+            font-weight: 500;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.4), transparent);
+            margin: 2rem 0;
+        }
+
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.65rem;
+            margin-bottom: 2rem;
+        }
+
+        .skill-tag {
+            padding: 0.4rem 1rem;
+            font-size: 0.82rem;
+            border-radius: 100px;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            color: #93bbfc;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .skill-tag:hover {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-links a {
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s ease;
+            letter-spacing: 0.3px;
+        }
+
+        .social-links a:hover {
+            color: #60a5fa;
+        }
+
+        .footer-note {
+            margin-top: 2rem;
+            font-size: 0.75rem;
+            color: #3a4c64;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 2rem 1.5rem;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .skill-tag {
+                font-size: 0.75rem;
+                padding: 0.3rem 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="badge">✦ kaanqnw.com</div>
+
+        <h1>Merhaba, ben <span>Kaan</span>.</h1>
+
+        <div class="subtitle">
+            Sızma testi uzmanı &amp; yazılım geliştirici
+        </div>
+
+        <div class="location-line">
+            Gaziantep
+        </div>
+
+        <div class="bio-text">
+            <p>
+                <span class="gaziantep-highlight">Antepli'yim.</span> İnsanların "olmaz" dediği yerde başlar benim işim. 
+                Bir sisteme sızmak, onu tanımaktır. Bir açık bulmak, 
+                onu anlamaktır. <span class="highlight">Güvenlik bir hedef değil, bir yolculuk.</span>
+            </p>
+            <p>
+                Gündüz kod yazarım, gece satır satır okurum. 
+                Web uygulamalarını delik deşik eder, sonra onları 
+                daha güçlü ayağa kaldırırım. Her zafiyet bir ders, 
+                her sistem yeni bir meydan okuma.
+            </p>
+            <p>
+                <span class="highlight">kaanqnw.com</span> — burası benim dijital odam. 
+                Antep'ten dünyaya açılan bir pencere. 
+                İstersen otur, bir kahve iç, sohbet ederiz.
+            </p>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="skills">
+            <span class="skill-tag">Pentesting</span>
+            <span class="skill-tag">Web Security</span>
+            <span class="skill-tag">Python</span>
+            <span class="skill-tag">JavaScript</span>
+            <span class="skill-tag">Linux</span>
+            <span class="skill-tag">Burp Suite</span>
+            <span class="skill-tag">Network</span>
+            <span class="skill-tag">OSINT</span>
+        </div>
+
+        <div class="social-links">
+            <a href="#">GitHub</a>
+            <a href="#">Instagram</a>
+            <a href="#">LinkedIn</a>
+            <a href="#">X / Twitter</a>
+        </div>
+
+        <div class="footer-note">
+            kaanqnw.com — Gaziantep, Türkiye ♢
+        </div>
+    </div>
+</body>
+</html>
