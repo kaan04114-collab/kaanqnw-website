@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>KaanQNW - Dijital Hizmetler</title>
     <style>
         * {
@@ -10,6 +10,7 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -20,40 +21,42 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
+            padding: 15px;
+            padding-bottom: 90px;
         }
 
         header {
             text-align: center;
-            margin-top: 20px;
-            margin-bottom: 30px;
+            margin-top: 15px;
+            margin-bottom: 25px;
+            width: 100%;
         }
 
         header h1 {
-            font-size: 2.8rem;
+            font-size: 2.2rem;
             color: #38bdf8;
             letter-spacing: 1px;
-            text-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+            text-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
         }
 
         header p {
             color: #cbd5e1;
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             margin-top: 5px;
         }
 
-        /* Slayt / Kart Kaydırma Alanı */
+        /* Mobil Uyumlu Slayt Alanı */
         .slider-wrapper {
             width: 100%;
             max-width: 1000px;
             overflow-x: auto;
-            padding: 20px 10px;
+            padding: 10px 5px;
             scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
         }
 
-        /* Yatay kaydırma çubuğu stili */
         .slider-wrapper::-webkit-scrollbar {
-            height: 8px;
+            height: 6px;
         }
         .slider-wrapper::-webkit-scrollbar-track {
             background: rgba(15, 23, 42, 0.6);
@@ -66,118 +69,129 @@
 
         .cards-container {
             display: flex;
-            gap: 20px;
+            gap: 15px;
             width: max-content;
         }
 
         .card {
-            background: rgba(15, 23, 42, 0.75);
+            background: rgba(15, 23, 42, 0.85);
             border: 1px solid #0284c7;
-            border-radius: 20px;
-            width: 280px;
-            padding: 25px;
+            border-radius: 18px;
+            width: 260px;
+            padding: 20px;
             text-align: center;
             backdrop-filter: blur(12px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-            transition: transform 0.3s ease, border-color 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
 
-        .card:hover {
-            transform: translateY(-8px) scale(1.02);
-            border-color: #38bdf8;
-            box-shadow: 0 12px 30px rgba(56, 189, 248, 0.3);
-        }
-
         .card h2 {
             color: #60a5fa;
-            font-size: 1.4rem;
-            margin-bottom: 10px;
+            font-size: 1.3rem;
+            margin-bottom: 8px;
         }
 
         .badge {
             display: inline-block;
             background-color: #0284c7;
             color: #fff;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            margin-bottom: 15px;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            margin-bottom: 12px;
             font-weight: 600;
         }
 
         .price {
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: bold;
             color: #38bdf8;
-            margin-bottom: 10px;
-            text-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+            margin-bottom: 8px;
         }
 
         .card p {
             color: #94a3b8;
-            font-size: 0.95rem;
+            font-size: 0.88rem;
         }
 
-        /* İletişim ve Link Butonları */
+        /* İletişim Alanı */
         .contact-section {
             width: 100%;
-            max-width: 600px;
-            margin-top: 30px;
-            background: rgba(15, 23, 42, 0.85);
+            max-width: 500px;
+            margin-top: 25px;
+            background: rgba(15, 23, 42, 0.9);
             border: 1px solid #0369a1;
-            border-radius: 20px;
-            padding: 25px;
+            border-radius: 18px;
+            padding: 20px;
             text-align: center;
-            backdrop-filter: blur(10px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
         }
 
         .contact-section h2 {
             color: #38bdf8;
-            margin-bottom: 15px;
-            font-size: 1.5rem;
+            margin-bottom: 12px;
+            font-size: 1.3rem;
         }
 
         .btn-container {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            margin-top: 15px;
+            gap: 12px;
+            margin-top: 12px;
         }
 
         .btn {
             display: block;
-            padding: 14px 20px;
+            padding: 12px 18px;
             border-radius: 12px;
             text-decoration: none;
             font-weight: bold;
-            font-size: 1.05rem;
-            transition: all 0.3s ease;
+            font-size: 1rem;
             color: white;
+            transition: opacity 0.2s;
+        }
+
+        .btn:active {
+            opacity: 0.8;
         }
 
         .btn-instagram {
             background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-            box-shadow: 0 4px 15px rgba(220, 39, 67, 0.3);
         }
 
         .btn-whatsapp {
             background-color: #25d366;
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
         }
 
-        .btn:hover {
-            transform: translateY(-3px);
-            filter: brightness(1.1);
+        /* Sabit Müzik Butonu */
+        .music-player {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .music-btn {
+            background: #0284c7;
+            color: white;
+            border: 2px solid #38bdf8;
+            padding: 12px 18px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         footer {
-            margin-top: 40px;
+            margin-top: 30px;
             color: #64748b;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             text-align: center;
         }
     </style>
@@ -189,7 +203,7 @@
         <p>Hesap ve Dijital Kod Hizmetleri (Sağa Kaydırın ➔)</p>
     </header>
 
-    <!-- Slayt Mantığında Yan Yana Dizili Kartlar -->
+    <!-- Slayt Kartları -->
     <div class="slider-wrapper">
         <div class="cards-container">
 
@@ -209,7 +223,7 @@
                 <p>Hızlı teslimat ve Prime dizi/filmler.</p>
             </div>
 
-            <!-- Brawl Stars Random -->
+            <!-- BS Random Hesap -->
             <div class="card">
                 <h2>BS Random Hesap</h2>
                 <div class="badge">Rastgele Karakterler</div>
@@ -247,22 +261,64 @@
     <!-- İletişim Alanı -->
     <div class="contact-section">
         <h2>Sipariş ve İletişim</h2>
-        <p style="color: #94a3b8; font-size: 0.95rem;">Satın almak için aşağıdaki kanallardan ulaşabilirsiniz:</p>
+        <p style="color: #94a3b8; font-size: 0.88rem;">Satın almak için aşağıdaki kanallardan ulaşabilirsiniz:</p>
         
         <div class="btn-container">
             <a href="https://instagram.com/kaanqnw" target="_blank" class="btn btn-instagram">
                 📸 Instagram: @kaanqnw
             </a>
-            
             <a href="https://wa.me/639050967485" target="_blank" class="btn btn-whatsapp">
-                💬 WhatsApp İletişim (+63 905 096 7485)
+                💬 WhatsApp (+63 905 096 7485)
             </a>
         </div>
+    </div>
+
+    <!-- Müzik Çalar (Yüklediğin 'muzik.mp3' Dosyasını Çalar) -->
+    <div class="music-player">
+        <audio id="bgMusic" loop>
+            <source src="muzik.mp3" type="audio/mpeg">
+        </audio>
+        <button class="music-btn" onclick="toggleMusic()">
+            🎵 <span id="musicText">Müziği Başlat</span>
+        </button>
     </div>
 
     <footer>
         &copy; 2026 kaanqnw.xyz - Tüm Hakları Saklıdır.
     </footer>
+
+    <script>
+        var audio = document.getElementById("bgMusic");
+        var text = document.getElementById("musicText");
+        var hasStarted = false;
+
+        // Ses seviyesi (%50)
+        audio.volume = 0.5;
+
+        // Sayfada herhangi bir yere ilk dokunulduğunda/tıklandığında müziği başlat
+        document.addEventListener('click', function() {
+            if (!hasStarted) {
+                audio.play().then(() => {
+                    text.innerText = "Müziği Durdur";
+                    hasStarted = true;
+                }).catch(error => {
+                    console.log("Müzik otomatik başlatılamadı:", error);
+                });
+            }
+        }, { once: true });
+
+        // Butona manuel basıldığında açma/kapama
+        function toggleMusic() {
+            if (audio.paused) {
+                audio.play();
+                text.innerText = "Müziği Durdur";
+                hasStarted = true;
+            } else {
+                audio.pause();
+                text.innerText = "Müziği Başlat";
+            }
+        }
+    </script>
 
 </body>
 </html>
