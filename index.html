@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KaanQNW - Dijital Hizmetler & Hesaplar</title>
+    <title>KaanQNW - Dijital Hizmetler</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,8 @@
         }
 
         body {
-            background: linear-gradient(135deg, #0f172a, #1e293b);
+            background: linear-gradient(135deg, #0f172a, #1e293b, #0284c7);
+            background-attachment: fixed;
             color: #f8fafc;
             min-height: 100vh;
             display: flex;
@@ -24,111 +25,160 @@
 
         header {
             text-align: center;
-            margin-top: 30px;
-            margin-bottom: 40px;
+            margin-top: 20px;
+            margin-bottom: 30px;
         }
 
         header h1 {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             color: #38bdf8;
-            margin-bottom: 10px;
-            text-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+            letter-spacing: 1px;
+            text-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
         }
 
         header p {
-            color: #94a3b8;
+            color: #cbd5e1;
             font-size: 1.1rem;
+            margin-top: 5px;
         }
 
-        .container {
+        /* Slayt / Kart Kaydırma Alanı */
+        .slider-wrapper {
             width: 100%;
-            max-width: 900px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            max-width: 1000px;
+            overflow-x: auto;
+            padding: 20px 10px;
+            scroll-behavior: smooth;
+        }
+
+        /* Yatay kaydırma çubuğu stili */
+        .slider-wrapper::-webkit-scrollbar {
+            height: 8px;
+        }
+        .slider-wrapper::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 10px;
+        }
+        .slider-wrapper::-webkit-scrollbar-thumb {
+            background: #0284c7;
+            border-radius: 10px;
+        }
+
+        .cards-container {
+            display: flex;
             gap: 20px;
-            margin-bottom: 40px;
+            width: max-content;
         }
 
         .card {
-            background: rgba(30, 41, 59, 0.7);
-            border: 1px solid #334155;
-            border-radius: 16px;
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid #0284c7;
+            border-radius: 20px;
+            width: 280px;
             padding: 25px;
             text-align: center;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
             transition: transform 0.3s ease, border-color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px) scale(1.02);
             border-color: #38bdf8;
+            box-shadow: 0 12px 30px rgba(56, 189, 248, 0.3);
         }
 
         .card h2 {
             color: #60a5fa;
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-        }
-
-        .price {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #38bdf8;
+            font-size: 1.4rem;
             margin-bottom: 10px;
         }
 
         .badge {
             display: inline-block;
-            background-color: #2563eb;
+            background-color: #0284c7;
             color: #fff;
             padding: 4px 12px;
             border-radius: 20px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             margin-bottom: 15px;
+            font-weight: 600;
         }
 
-        .payment-box {
+        .price {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #38bdf8;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+        }
+
+        .card p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+
+        /* İletişim ve Link Butonları */
+        .contact-section {
             width: 100%;
-            max-width: 900px;
-            background: #1e293b;
-            border: 2px dashed #2563eb;
-            border-radius: 16px;
+            max-width: 600px;
+            margin-top: 30px;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid #0369a1;
+            border-radius: 20px;
             padding: 25px;
             text-align: center;
+            backdrop-filter: blur(10px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
         }
 
-        .payment-box h2 {
+        .contact-section h2 {
             color: #38bdf8;
             margin-bottom: 15px;
+            font-size: 1.5rem;
         }
 
-        .iban-status {
-            display: inline-block;
-            background-color: #16a34a;
-            color: white;
-            padding: 6px 16px;
-            border-radius: 8px;
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            display: block;
+            padding: 14px 20px;
+            border-radius: 12px;
+            text-decoration: none;
             font-weight: bold;
-            margin-bottom: 15px;
+            font-size: 1.05rem;
+            transition: all 0.3s ease;
+            color: white;
         }
 
-        .iban-details {
-            background-color: #0f172a;
-            padding: 15px;
-            border-radius: 8px;
-            font-family: monospace;
-            font-size: 1.1rem;
-            color: #e2e8f0;
-            letter-spacing: 1px;
-            user-select: all;
+        .btn-instagram {
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            box-shadow: 0 4px 15px rgba(220, 39, 67, 0.3);
+        }
+
+        .btn-whatsapp {
+            background-color: #25d366;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            filter: brightness(1.1);
         }
 
         footer {
-            margin-top: auto;
-            padding: 20px;
+            margin-top: 40px;
             color: #64748b;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+            text-align: center;
         }
     </style>
 </head>
@@ -136,43 +186,77 @@
 
     <header>
         <h1>kaanqnw.xyz</h1>
-        <p>Hızlı ve Güvenilir Dijital Hesap Hizmetleri</p>
+        <p>Hesap ve Dijital Kod Hizmetleri (Sağa Kaydırın ➔)</p>
     </header>
 
-    <div class="container">
-        <!-- Netflix Kartı -->
-        <div class="card">
-            <h2>Netflix Premium</h2>
-            <div class="badge">4K Ultra HD</div>
-            <div class="price">50 TL</div>
-            <p style="color: #94a3b8;">1 Aylık Kullanım</p>
-        </div>
+    <!-- Slayt Mantığında Yan Yana Dizili Kartlar -->
+    <div class="slider-wrapper">
+        <div class="cards-container">
 
-        <!-- Amazon Prime Kartı -->
-        <div class="card">
-            <h2>Amazon Prime</h2>
-            <div class="badge">Prime Video & Cargo</div>
-            <div class="price">50 TL</div>
-            <p style="color: #94a3b8;">1 Aylık Kullanım</p>
-        </div>
+            <!-- Netflix -->
+            <div class="card">
+                <h2>Netflix Premium</h2>
+                <div class="badge">4K UHD / 1 Ay</div>
+                <div class="price">50 TL</div>
+                <p>Sorunsuz ve garantili izleme keyfi.</p>
+            </div>
 
-        <!-- Diğer Hizmetler Kartı -->
-        <div class="card">
-            <h2>Diğer Hizmetler</h2>
-            <div class="badge">Özel İstek</div>
-            <p style="color: #cbd5e1; margin-top: 15px;">Farklı dijital üyelik ve hesap talepleriniz için iletişime geçebilirsiniz.</p>
+            <!-- Amazon Prime -->
+            <div class="card">
+                <h2>Amazon Prime</h2>
+                <div class="badge">Prime Video / 1 Ay</div>
+                <div class="price">50 TL</div>
+                <p>Hızlı teslimat ve Prime dizi/filmler.</p>
+            </div>
+
+            <!-- Brawl Stars Random -->
+            <div class="card">
+                <h2>BS Random Hesap</h2>
+                <div class="badge">Rastgele Karakterler</div>
+                <div class="price">10 TL</div>
+                <p>Sürpriz kostüm ve kupalı hesaplar.</p>
+            </div>
+
+            <!-- Windows Key -->
+            <div class="card">
+                <h2>Windows Key</h2>
+                <div class="badge">Orijinal Lisans</div>
+                <div class="price">30 TL</div>
+                <p>Süresiz etkinleştirme anahtarı.</p>
+            </div>
+
+            <!-- WhatsApp Fake No -->
+            <div class="card">
+                <h2>WhatsApp Fake No</h2>
+                <div class="badge">Sanal Numara</div>
+                <div class="price">20 TL</div>
+                <p>Kişisel numaranızı gizleyin.</p>
+            </div>
+
+            <!-- Telegram No -->
+            <div class="card">
+                <h2>Telegram No</h2>
+                <div class="badge">Sanal Numara</div>
+                <div class="price">40 TL</div>
+                <p>Anında onaylı Telegram hesabı.</p>
+            </div>
+
         </div>
     </div>
 
-    <!-- Ödeme ve IBAN Bilgisi -->
-    <div class="payment-box">
-        <h2>Ödeme Bilgileri</h2>
-        <div class="iban-status">IBAN AKTİF</div>
-        <p style="margin-bottom: 10px; color: #94a3b8;">Sipariş vermek ve ödeme detaylarını almak için iletişime geçin:</p>
-        <div class="iban-details">
-            TR00 0000 0000 0000 0000 0000 00
-            <br>
-            <span style="font-size: 0.9rem; color: #94a3b8;">(Alıcı İsmi Buraya)</span>
+    <!-- İletişim Alanı -->
+    <div class="contact-section">
+        <h2>Sipariş ve İletişim</h2>
+        <p style="color: #94a3b8; font-size: 0.95rem;">Satın almak için aşağıdaki kanallardan ulaşabilirsiniz:</p>
+        
+        <div class="btn-container">
+            <a href="https://instagram.com/kaanqnw" target="_blank" class="btn btn-instagram">
+                📸 Instagram: @kaanqnw
+            </a>
+            
+            <a href="https://wa.me/639050967485" target="_blank" class="btn btn-whatsapp">
+                💬 WhatsApp İletişim (+63 905 096 7485)
+            </a>
         </div>
     </div>
 
