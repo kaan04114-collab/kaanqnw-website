@@ -109,6 +109,9 @@ function App() {
   const [isRegister, setIsRegister] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  
+  // YENİ: Ekrana çıkacak özel hata mesajı için State
+  const [customAlert, setCustomAlert] = useState(null);
 
   useEffect(() => {
     const savedUser = JSON.parse(localStorage.getItem('activeUser'));
@@ -168,7 +171,13 @@ function App() {
 
   const handleBuyProduct = (product) => {
     if (!currentUser) return setIsAuthOpen(true);
-    if (currentUser.balance < product.price) return alert('Yetersiz bakiye! Lütfen WhatsApp üzerinden bakiye yükleyin.');
+    
+    // YENİ: Tarayıcı alerti yerine ekrana özel hata tasarımı çıkarıyoruz
+    if (currentUser.balance < product.price) {
+      setCustomAlert('Bakiyeniz yetmiyor! Lütfen WhatsApp üzerinden iletişime geçerek bakiye yükleyin.');
+      return;
+    }
+    
     if (!window.confirm(`${product.title} ürününü ${product.price} TL bakiyenizle almak istiyor musunuz?`)) return;
 
     const newBalance = currentUser.balance - product.price;
@@ -224,7 +233,6 @@ function App() {
             <p className="text-xs text-slate-400">IBAN veya Papara numarası almak için WhatsApp'tan iletişime geçin. Ödemeniz onaylandıktan sonra bakiyeniz hemen hesabınıza eklenecektir.</p>
           </div>
           
-          {/* BURADAKİ 905550000000 YAZAN YERE KENDİ TELEFON NUMARANI YAZ */}
           <a href="https://wa.me/905550000000?text=Merhaba,%20kaanqnw.xyz%20sitesi%20için%20bakiye%20yüklemek%20istiyorum." target="_blank" rel="noreferrer" className="w-full md:w-auto bg-[#25D366] hover:bg-[#1ebd5a] transition-colors text-white font-bold px-8 py-3.5 rounded-xl text-sm whitespace-nowrap shadow-lg shadow-[#25D366]/20 flex items-center justify-center gap-2">
             <span className="text-xl">📱</span> WhatsApp'tan Ulaş
           </a>
@@ -264,6 +272,21 @@ function App() {
         </section>
       </main>
 
+      {/* YENİ: ÖZEL HATA UYARISI (MODAL) */}
+      {customAlert && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-slate-900 border border-rose-500/50 p-8 rounded-2xl w-full max-w-sm relative shadow-2xl text-center flex flex-col items-center">
+            <div className="text-5xl mb-4">⚠️</div>
+            <h2 className="text-xl font-bold text-white mb-2">İşlem Başarısız</h2>
+            <p className="text-slate-400 text-sm mb-6">{customAlert}</p>
+            <button onClick={() => setCustomAlert(null)} className="w-full bg-rose-500 hover:bg-rose-400 text-white font-bold py-3 rounded-xl transition-colors">
+              Tamam
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* GİRİŞ/KAYIT MODALI */}
       {isAuthOpen && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-slate-900 border border-slate-700 p-8 rounded-2xl w-full max-w-sm relative shadow-2xl">
