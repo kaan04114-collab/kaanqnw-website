@@ -1,13 +1,13 @@
 const { useState, useEffect } = React;
 
 // YÖNETİCİ PANELİ BİLEŞENİ
-function AdminPanel({ onUpdateUsers, orders, onUpdateOrders, users, setUsers }) {
+function AdminPanel({ onUpdateUsers, orders, onUpdateOrders, users, setUsers, showAlert, showConfirm }) {
   const [selectedUser, setSelectedUser] = useState('');
   const [amountToAdd, setAmountToAdd] = useState('');
 
   const handleAddBalance = (e) => {
     e.preventDefault();
-    if (!selectedUser || !amountToAdd) return alert('Kullanıcı ve miktar seçin!');
+    if (!selectedUser || !amountToAdd) return showAlert('Kullanıcı ve miktar seçin!', 'warning');
 
     const updatedUsers = { ...users };
     if (updatedUsers[selectedUser]) {
@@ -15,7 +15,7 @@ function AdminPanel({ onUpdateUsers, orders, onUpdateOrders, users, setUsers }) 
       localStorage.setItem('siteUsers', JSON.stringify(updatedUsers));
       setUsers(updatedUsers);
       onUpdateUsers(updatedUsers);
-      alert(`${selectedUser} adlı kullanıcıya ${amountToAdd} TL bakiye eklendi!`);
+      showAlert(`${selectedUser} adlı kullanıcıya ${amountToAdd} TL bakiye eklendi!`, 'success');
       setAmountToAdd('');
     }
   };
@@ -23,21 +23,23 @@ function AdminPanel({ onUpdateUsers, orders, onUpdateOrders, users, setUsers }) 
   const handleApproveOrder = (orderId) => {
     const updatedOrders = orders.map(order => order.id === orderId ? { ...order, status: 'Onaylandı' } : order);
     onUpdateOrders(updatedOrders);
-    alert('Sipariş başarıyla onaylandı!');
+    showAlert('Sipariş başarıyla onaylandı!', 'success');
   };
 
   const handleRejectOrder = (order) => {
-    if (!window.confirm('Siparişi iptal edip bakiyeyi müşteriye iade etmek istediğinize emin misiniz?')) return;
-    const updatedOrders = orders.map(o => o.id === order.id ? { ...o, status: 'İptal / İade' } : o);
-    onUpdateOrders(updatedOrders);
+    showConfirm('Siparişi iptal edip bakiyeyi müşteriye iade etmek istediğinize emin misiniz?', () => {
+      const updatedOrders = orders.map(o => o.id === order.id ? { ...o, status: 'İptal / İade' } : o);
+      onUpdateOrders(updatedOrders);
 
-    const updatedUsers = { ...users };
-    if (updatedUsers[order.username]) {
-      updatedUsers[order.username].balance = (updatedUsers[order.username].balance || 0) + order.price;
-      localStorage.setItem('siteUsers', JSON.stringify(updatedUsers));
-      setUsers(updatedUsers);
-      onUpdateUsers(updatedUsers);
-    }
+      const updatedUsers = { ...users };
+      if (updatedUsers[order.username]) {
+        updatedUsers[order.username].balance = (updatedUsers[order.username].balance || 0) + order.price;
+        localStorage.setItem('siteUsers', JSON.stringify(updatedUsers));
+        setUsers(updatedUsers);
+        onUpdateUsers(updatedUsers);
+      }
+      showAlert('Sipariş iptal edildi ve bakiye iade edildi.', 'success');
+    });
   };
 
   return (
@@ -110,8 +112,19 @@ function App() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   
-  // YENİ: Ekrana çıkacak özel hata mesajı için State
-  const [customAlert, setCustomAlert] = useState(null);
+  // ÖZEL UYARI VE ONAY KUTULARI İÇİN STATE'LER
+  const [alertBox, setAlertBox] = useState({ isOpen: false, message: '', type: 'info' });
+  const [confirmBox, setConfirmBox] = useState({ isOpen: false, message: '', onConfirm: null });
+
+  // Tarayıcı alerti yerine kullanacağımız fonksiyon
+  const showAlert = (message, type = 'info') => {
+    setAlertBox({ isOpen: true, message, type });
+  };
+
+  // Tarayıcı confirm (emin misiniz) yerine kullanacağımız fonksiyon
+  const showConfirm = (message, onConfirmCallback) => {
+    setConfirmBox({ isOpen: true, message, onConfirm: onConfirmCallback });
+  };
 
   useEffect(() => {
     const savedUser = JSON.parse(localStorage.getItem('activeUser'));
@@ -144,11 +157,11 @@ function App() {
 
   const handleAuthSubmit = (e) => {
     e.preventDefault();
-    if (!username || !password) return alert('Tüm alanları doldurun!');
+    if (!username || !password) return showAlert('Tüm alanları doldurun!', 'warning');
     const allUsers = { ...users };
 
     if (isRegister) {
-      if (allUsers[username]) return alert('Bu kullanıcı adı alınmış!');
+      if (allUsers[username]) return showAlert('Bu kullanıcı adı daha önce alınmış!', 'warning');
       const newUser = { username, password, balance: 0 };
       allUsers[username] = newUser;
       localStorage.setItem('siteUsers', JSON.stringify(allUsers));
@@ -156,6 +169,7 @@ function App() {
       setCurrentUser(newUser);
       localStorage.setItem('activeUser', JSON.stringify(newUser));
       setIsAuthOpen(false);
+      showAlert('Kayıt başarılı, hoş geldiniz!', 'success');
     } else {
       const user = allUsers[username];
       if (user && user.password === password) {
@@ -163,7 +177,7 @@ function App() {
         localStorage.setItem('activeUser', JSON.stringify(user));
         setIsAuthOpen(false);
       } else {
-        alert('Hatalı giriş!');
+        showAlert('Kullanıcı adı veya şifre hatalı!', 'error');
       }
     }
     setUsername(''); setPassword('');
@@ -172,27 +186,27 @@ function App() {
   const handleBuyProduct = (product) => {
     if (!currentUser) return setIsAuthOpen(true);
     
-    // YENİ: Tarayıcı alerti yerine ekrana özel hata tasarımı çıkarıyoruz
     if (currentUser.balance < product.price) {
-      setCustomAlert('Bakiyeniz yetmiyor! Lütfen WhatsApp üzerinden iletişime geçerek bakiye yükleyin.');
-      return;
+      return showAlert('Bakiyeniz yetmiyor! Lütfen WhatsApp üzerinden bakiye yükleyin.', 'error');
     }
     
-    if (!window.confirm(`${product.title} ürününü ${product.price} TL bakiyenizle almak istiyor musunuz?`)) return;
+    // Satın alma onayı (confirm)
+    showConfirm(`${product.title} ürününü ${product.price} TL bakiyenizle almak istiyor musunuz?`, () => {
+      const newBalance = currentUser.balance - product.price;
+      const updatedUser = { ...currentUser, balance: newBalance };
+      const allUsers = { ...users };
+      allUsers[currentUser.username] = updatedUser;
+      
+      localStorage.setItem('siteUsers', JSON.stringify(allUsers));
+      localStorage.setItem('activeUser', JSON.stringify(updatedUser));
+      setUsers(allUsers);
+      setCurrentUser(updatedUser);
 
-    const newBalance = currentUser.balance - product.price;
-    const updatedUser = { ...currentUser, balance: newBalance };
-    const allUsers = { ...users };
-    allUsers[currentUser.username] = updatedUser;
-    
-    localStorage.setItem('siteUsers', JSON.stringify(allUsers));
-    localStorage.setItem('activeUser', JSON.stringify(updatedUser));
-    setUsers(allUsers);
-    setCurrentUser(updatedUser);
-
-    const newOrder = { id: Date.now(), username: currentUser.username, productTitle: product.title, price: product.price, status: 'Beklemede', date: new Date().toLocaleString('tr-TR') };
-    handleOrdersUpdate([newOrder, ...orders]);
-    alert('Siparişiniz alındı! Admin onayından sonra hesabınız teslim edilecektir.');
+      const newOrder = { id: Date.now(), username: currentUser.username, productTitle: product.title, price: product.price, status: 'Beklemede', date: new Date().toLocaleString('tr-TR') };
+      handleOrdersUpdate([newOrder, ...orders]);
+      
+      showAlert('Siparişiniz alındı! Admin onayından sonra hesabınız teslim edilecektir.', 'success');
+    });
   };
 
   const myOrders = orders.filter(o => o.username === currentUser?.username);
@@ -218,7 +232,15 @@ function App() {
 
       <main className="max-w-6xl mx-auto px-4 py-8">
         {currentUser?.username === 'adminkaanqnw' && (
-          <AdminPanel onUpdateUsers={handleUsersUpdate} orders={orders} onUpdateOrders={handleOrdersUpdate} users={users} setUsers={setUsers} />
+          <AdminPanel 
+            onUpdateUsers={handleUsersUpdate} 
+            orders={orders} 
+            onUpdateOrders={handleOrdersUpdate} 
+            users={users} 
+            setUsers={setUsers} 
+            showAlert={showAlert} 
+            showConfirm={showConfirm} 
+          />
         )}
 
         <section className="text-center my-8 md:my-16">
@@ -226,13 +248,11 @@ function App() {
           <p className="text-slate-400 text-sm md:text-base max-w-2xl mx-auto">Güvenli bakiye sistemi ile lisanslarınızı anında teslim alın.</p>
         </section>
 
-        {/* WHATSAPP İLE BAKİYE YÜKLEME BÖLÜMÜ */}
         <section className="my-8 bg-gradient-to-r from-emerald-900/40 to-slate-900 border border-emerald-500/30 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
           <div>
             <h2 className="text-xl font-bold text-white mb-2">💬 Bakiye Yükle (Havale / Papara)</h2>
             <p className="text-xs text-slate-400">IBAN veya Papara numarası almak için WhatsApp'tan iletişime geçin. Ödemeniz onaylandıktan sonra bakiyeniz hemen hesabınıza eklenecektir.</p>
           </div>
-          
           <a href="https://wa.me/905550000000?text=Merhaba,%20kaanqnw.xyz%20sitesi%20için%20bakiye%20yüklemek%20istiyorum." target="_blank" rel="noreferrer" className="w-full md:w-auto bg-[#25D366] hover:bg-[#1ebd5a] transition-colors text-white font-bold px-8 py-3.5 rounded-xl text-sm whitespace-nowrap shadow-lg shadow-[#25D366]/20 flex items-center justify-center gap-2">
             <span className="text-xl">📱</span> WhatsApp'tan Ulaş
           </a>
@@ -272,16 +292,51 @@ function App() {
         </section>
       </main>
 
-      {/* YENİ: ÖZEL HATA UYARISI (MODAL) */}
-      {customAlert && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-slate-900 border border-rose-500/50 p-8 rounded-2xl w-full max-w-sm relative shadow-2xl text-center flex flex-col items-center">
-            <div className="text-5xl mb-4">⚠️</div>
-            <h2 className="text-xl font-bold text-white mb-2">İşlem Başarısız</h2>
-            <p className="text-slate-400 text-sm mb-6">{customAlert}</p>
-            <button onClick={() => setCustomAlert(null)} className="w-full bg-rose-500 hover:bg-rose-400 text-white font-bold py-3 rounded-xl transition-colors">
+      {/* ÖZEL ALERT (BİLGİ / HATA) KUTUSU */}
+      {alertBox.isOpen && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-[60]">
+          <div className={`bg-slate-900 border ${alertBox.type === 'error' ? 'border-rose-500/50' : alertBox.type === 'success' ? 'border-emerald-500/50' : 'border-sky-500/50'} p-8 rounded-2xl w-full max-w-sm relative shadow-2xl text-center flex flex-col items-center`}>
+            <div className="text-5xl mb-4">
+              {alertBox.type === 'error' ? '⚠️' : alertBox.type === 'success' ? '✅' : 'ℹ️'}
+            </div>
+            <h2 className="text-xl font-bold text-white mb-2">
+              {alertBox.type === 'error' ? 'Hata' : alertBox.type === 'success' ? 'Başarılı' : 'Bilgi'}
+            </h2>
+            <p className="text-slate-400 text-sm mb-6">{alertBox.message}</p>
+            <button 
+              onClick={() => setAlertBox({ ...alertBox, isOpen: false })} 
+              className={`w-full text-white font-bold py-3 rounded-xl transition-colors ${alertBox.type === 'error' ? 'bg-rose-500 hover:bg-rose-400' : alertBox.type === 'success' ? 'bg-emerald-500 hover:bg-emerald-400' : 'bg-sky-500 hover:bg-sky-400'}`}
+            >
               Tamam
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* ÖZEL CONFIRM (ONAY) KUTUSU */}
+      {confirmBox.isOpen && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-[60]">
+          <div className="bg-slate-900 border border-amber-500/50 p-8 rounded-2xl w-full max-w-sm relative shadow-2xl text-center flex flex-col items-center">
+            <div className="text-5xl mb-4">❓</div>
+            <h2 className="text-xl font-bold text-white mb-2">Onay Gerekiyor</h2>
+            <p className="text-slate-400 text-sm mb-6">{confirmBox.message}</p>
+            <div className="flex w-full gap-3">
+              <button 
+                onClick={() => setConfirmBox({ ...confirmBox, isOpen: false })} 
+                className="flex-1 bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 rounded-xl transition-colors"
+              >
+                İptal
+              </button>
+              <button 
+                onClick={() => {
+                  if (confirmBox.onConfirm) confirmBox.onConfirm();
+                  setConfirmBox({ ...confirmBox, isOpen: false });
+                }} 
+                className="flex-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 rounded-xl transition-colors"
+              >
+                Evet, Onayla
+              </button>
+            </div>
           </div>
         </div>
       )}
